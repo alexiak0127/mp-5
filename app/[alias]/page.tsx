@@ -2,11 +2,12 @@ import { redirect } from "next/navigation";
 import { getUrlByAlias } from "@/lib/getUrlByAlias";
 
 type Props = {
-  params: { alias: string };
+  params: Promise<{ alias: string }>;
 };
 
 export default async function AliasRedirectPage({ params }: Props) {
-  const record = await getUrlByAlias(params.alias);
+  const { alias } = await params;
+  const record = await getUrlByAlias(alias);
 
   if (!record) {
     // If alias not found, send back home

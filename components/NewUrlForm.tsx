@@ -49,49 +49,58 @@ export default function NewUrlForm({ onCreated }: Props) {
     lastCreated && origin ? `${origin}/${lastCreated.alias}` : null;
 
   return (
-    <div style={{ marginTop: "1rem" }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "grid", gap: "0.75rem" }}
-      >
-        <input
-          type="text"
-          placeholder="Long URL (https://...)"
-          value={targetUrl}
-          onChange={(e) => setTargetUrl(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Alias (e.g. cs391)"
-          value={alias}
-          onChange={(e) => setAlias(e.target.value)}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create short URL"}
+    <div className="mt-4 bg-white rounded-lg shadow-md p-6 border border-gray-200">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <input
+            type="text"
+            placeholder="Long URL (https://...)"
+            value={targetUrl}
+            onChange={(e) => setTargetUrl(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Alias (e.g. cs391)"
+            value={alias}
+            onChange={(e) => setAlias(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-pink-700 hover:bg-pink-800 disabled:bg-pink-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+        >
+          {loading ? "Creating..." : "Create Short URL"}
         </button>
       </form>
 
       {error && (
-        <p style={{ color: "red", marginTop: "0.5rem" }}>{error}</p>
+        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
       )}
 
       {shortUrl && (
-        <div style={{ marginTop: "0.75rem" }}>
-          <strong>Your new short URL:</strong>
-          <div
-            style={{
-              marginTop: "0.25rem",
-              padding: "0.5rem",
-              border: "1px solid #ccc",
-              borderRadius: 4,
-              userSelect: "all",
-              cursor: "pointer",
-            }}
-          >
-            {shortUrl}
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <strong className="text-green-900 block mb-2">✓ Your new short URL:</strong>
+          <div className="mt-2 p-3 bg-white border border-gray-300 rounded-lg">
+            <a
+              href={shortUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline break-all"
+            >
+              {shortUrl}
+            </a>
           </div>
-          <p style={{ fontSize: "0.9rem", marginTop: "0.25rem" }}>
-            (Click then press ⌘+C / Ctrl+C to copy.)
+          <p className="text-sm text-gray-600 mt-2">
+            Click the link to test the redirect, or select and copy (⌘+C / Ctrl+C).
           </p>
         </div>
       )}

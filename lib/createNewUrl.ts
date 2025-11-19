@@ -36,7 +36,7 @@ export default async function createNewUrl(
     };
   }
 
-  // Requirement #2 – URL validity (syntax, on the backend)
+  // Requirement #2 – URL validity
   if (!isValidUrlSyntax(trimmedUrl)) {
     return {
       ok: false,
