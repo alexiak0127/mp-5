@@ -1,4 +1,3 @@
-// lib/createNewUrl.ts
 "use server";
 
 import getCollection, { URLS_COLLECTION } from "@/db";
@@ -14,33 +13,9 @@ function isValidUrlSyntax(url: string): boolean {
   }
 }
 
-// Check that the URL actually responds
-async function urlExists(url: string): Promise<boolean> {
-  try {
-    // Try HEAD first
-    const headRes = await fetch(url, {
-      method: "HEAD",
-      redirect: "follow",
-    });
-
-    if (headRes.status < 400) {
-      return true;
-    }
-
-    // Some servers don’t support HEAD correctly → fall back to GET
-    if (headRes.status === 405 || headRes.status === 501) {
-      const getRes = await fetch(url, {
-        method: "GET",
-        redirect: "follow",
-      });
-      return getRes.status < 400;
-    }
-
-    return false;
-  } catch {
-    // DNS error, connection error, etc.
-    return false;
-  }
+// basic alias validation (letters, numbers, dashes only)
+function isValidAlias(alias: string): boolean {
+  return /^[a-zA-Z0-9-]+$/.test(alias);
 }
 
 export default async function createNewUrl(
@@ -50,26 +25,22 @@ export default async function createNewUrl(
   const trimmedAlias = alias.trim();
   const trimmedUrl = targetUrl.trim();
 
-  // Basic checks
   if (!trimmedAlias || !trimmedUrl) {
     return { ok: false, error: "Alias and URL are required." };
   }
 
-  // Requirement #2 – URL validity (syntax)
+  if (!isValidAlias(trimmedAlias)) {
+    return {
+      ok: false,
+      error: "Alias can only contain letters, numbers, and dashes.",
+    };
+  }
+
+  // Requirement #2 – URL validity (syntax, on the backend)
   if (!isValidUrlSyntax(trimmedUrl)) {
     return {
       ok: false,
       error: "Please enter a valid URL starting with http:// or https://",
-    };
-  }
-
-  // Requirement #2 – URL must actually exist
-  const reachable = await urlExists(trimmedUrl);
-  if (!reachable) {
-    return {
-      ok: false,
-      error:
-        "That URL could not be reached. Please check that it exists and try again.",
     };
   }
 
