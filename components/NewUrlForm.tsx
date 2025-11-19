@@ -100,7 +100,7 @@ export default function NewUrlForm({ onCreated }: Props) {
             </a>
           </div>
           <p className="text-sm text-gray-600 mt-2">
-            Click the link to test the redirect, or select and copy (⌘+C / Ctrl+C).
+            Click the link to test the redirect, or select and copy.
           </p>
         </div>
       )}
